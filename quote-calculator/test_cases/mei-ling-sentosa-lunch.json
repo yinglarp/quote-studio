@@ -1,0 +1,30 @@
+{
+  "source": "inputs/mei-ling-whatsapp.txt",
+  "enquiry": {
+    "customer_name": "Mei Ling",
+    "company": "Harbourline Insurance",
+    "issue_date": "2026-11-03",
+    "event_date": "2026-11-12",
+    "headcount": 25,
+    "package": "mini_buffet",
+    "service_staff": 1,
+    "service_hours": 4,
+    "delivery_zone": "sentosa_jurong",
+    "delivery_address": "Sentosa Cove",
+    "repeat_corporate": false,
+    "confirm_items": [
+      "Date: your message says 12/11. We have read it as Thursday 12 November 2026 (lunch). Please confirm.",
+      "Headcount: your message says about 25 pax. Please confirm the final number.",
+      "Service crew: 'half day' is quoted as 4 hours. Please confirm the hours you need."
+    ]
+  },
+  "expected": {
+    "order_value": "610.00",
+    "delivery_charge": "80.00",
+    "gst": "62.10",
+    "total": "752.10",
+    "deposit": "225.63",
+    "balance": "526.47",
+    "terms_file": "terms-2026.md"
+  }
+}

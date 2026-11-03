@@ -1,0 +1,24 @@
+{
+  "source": "reference/terms-2027.md is a draft (made-up case to exercise the 2027 rule)",
+  "enquiry": {
+    "customer_name": "Test Customer",
+    "company": "Next Year Pte Ltd",
+    "issue_date": "2026-11-03",
+    "event_date": "2027-01-15",
+    "headcount": 30,
+    "package": "classic_buffet",
+    "delivery_zone": "standard",
+    "delivery_address": "Ang Mo Kio office",
+    "repeat_corporate": false
+  },
+  "expected": {
+    "order_value": "804.00",
+    "delivery_charge": "0.00",
+    "gst": "72.36",
+    "total": "876.36",
+    "deposit": "262.91",
+    "balance": "613.45",
+    "terms_file": "terms-2026.md",
+    "terms_note_contains": "2027 terms and conditions are still a draft"
+  }
+}

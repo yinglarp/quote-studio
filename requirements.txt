@@ -1,0 +1,4 @@
+reportlab==5.1.0
+pypdf==6.21.4
+pypdfium2==5.14.0
+pytest==9.2.0

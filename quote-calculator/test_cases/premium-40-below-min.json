@@ -1,0 +1,16 @@
+{
+  "source": "design/quotation-design-checklist.md, R5",
+  "enquiry": {
+    "customer_name": "Test Customer",
+    "company": "Below Minimum Pte Ltd",
+    "issue_date": "2026-11-03",
+    "event_date": "2026-12-04",
+    "headcount": 40,
+    "package": "premium_buffet",
+    "delivery_zone": "standard",
+    "repeat_corporate": false
+  },
+  "expected": {
+    "error": "BelowMinimum"
+  }
+}

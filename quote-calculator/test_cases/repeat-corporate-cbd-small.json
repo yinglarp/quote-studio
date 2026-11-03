@@ -1,0 +1,24 @@
+{
+  "source": "reference/exception-memo-siti-2026-03.md (made-up case to exercise the memo)",
+  "enquiry": {
+    "customer_name": "Test Customer",
+    "company": "Repeat Client Pte Ltd",
+    "issue_date": "2026-11-03",
+    "event_date": "2026-11-20",
+    "headcount": 20,
+    "package": "bento_premium",
+    "extra_dessert": true,
+    "delivery_zone": "cbd",
+    "delivery_address": "Shenton Way office",
+    "repeat_corporate": true
+  },
+  "expected": {
+    "order_value": "396.00",
+    "delivery_charge": "0.00",
+    "gst": "35.64",
+    "total": "431.64",
+    "deposit": "129.49",
+    "balance": "302.15",
+    "terms_file": "terms-2026.md"
+  }
+}

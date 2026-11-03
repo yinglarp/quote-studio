@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `design/`: brand tokens, Roboto fonts, logo and the quotation design checklist. Use them for every quotation's look.
 - `inputs/`: customer enquiries (email, WhatsApp) to turn into quotations.
 - `reference/`: price list, terms and conditions by year, memos and meeting notes.
-- `quote-calculator/`: the pricing engine and its `rates.json` (not created yet).
+- `quote-calculator/`: `rates.json` (all prices), `engine.py`, `pdf.py`, the local form (`app.py`, started by `Start-Quote-Studio.bat`), `test_cases/` and `tests/` (`python -m pytest quote-calculator/tests`).
+- `scripts/quote_check.py`: checks R1–R5 of the design checklist for every test case.
 - `outputs/`: generated quotations. Gitignored; never commit it.
 - `staff/`: confidential. See Never.
 

@@ -1,0 +1,128 @@
+{
+  "_about": "The only place Quote Studio takes prices, charges and rates from. Every figure names its source. Money is written as strings so it loads as exact Decimal values.",
+  "prices_checked_on": "2026-11-03",
+  "currency_symbol": "S$",
+
+  "company": {
+    "name": "Heicoders Catering Pte Ltd",
+    "address": "12 Senoko Way, Singapore 758047",
+    "uen": "209900017K",
+    "gst_reg_no": "209900017K",
+    "email": "enquiries@heicoderscatering.example",
+    "source": "reference/price-list-2026.pdf, page footer"
+  },
+
+  "packages": {
+    "bento_classic": {
+      "name": "Bento Classic",
+      "unit": "box",
+      "minimum": 20,
+      "prices": [{ "from": "2026-01-01", "price": "12.80", "source": "reference/price-list-2026.pdf, page 1, Packages" }],
+      "includes": "Beef rendang or ayam masak merah, egg fried rice, stir-fried vegetables, sambal chilli"
+    },
+    "bento_premium": {
+      "name": "Bento Premium",
+      "unit": "box",
+      "minimum": 20,
+      "prices": [{ "from": "2026-01-01", "price": "16.80", "source": "reference/price-list-2026.pdf, page 1, Packages" }],
+      "includes": "Beef rendang, ayam masak merah or sweet and sour chicken, nasi minyak, stir-fried vegetables, chicken curry puff, fresh fruit, sambal chilli"
+    },
+    "mini_buffet": {
+      "name": "Mini Buffet (6 dishes)",
+      "unit": "pax",
+      "minimum": 20,
+      "prices": [{ "from": "2026-01-01", "price": "18.80", "source": "reference/price-list-2026.pdf, page 1, Packages" }],
+      "includes": "Egg fried rice, mee goreng, ayam masak merah, sweet and sour chicken, stir-fried vegetables, sago gula melaka"
+    },
+    "classic_buffet": {
+      "name": "Classic Buffet (8 dishes)",
+      "unit": "pax",
+      "minimum": 30,
+      "prices": [
+        { "from": "2026-01-01", "price": "24.80", "source": "reference/price-list-2026.pdf, page 1, Packages" },
+        { "from": "2026-10-01", "price": "26.80", "source": "reference/live-menu-page-snapshot-2026-09-14.html, price-change notice; adopted on 3 Nov 2026" }
+      ],
+      "includes": "Nasi minyak, mee goreng, beef rendang, ayam masak merah, chicken satay with satay sauce, stir-fried vegetables, chicken curry puffs, sago gula melaka"
+    },
+    "premium_buffet": {
+      "name": "Premium Buffet (10 dishes, dessert station)",
+      "unit": "pax",
+      "minimum": 50,
+      "prices": [{ "from": "2026-01-01", "price": "34.80", "source": "reference/price-list-2026.pdf, page 1, Packages" }],
+      "includes": "Nasi minyak, egg fried rice, mee goreng, beef rendang, ayam masak merah, chicken satay with satay sauce, sweet and sour chicken, stir-fried vegetables, chicken curry puffs, roti prata with dhal; dessert station with kueh lapis, sago gula melaka and fresh fruit"
+    }
+  },
+
+  "add_ons": {
+    "extra_dessert": {
+      "name": "Extra dessert (kueh lapis)",
+      "price": "3.00",
+      "per": "pax",
+      "source": "reference/price-list-2026.pdf, page 1, Add-ons"
+    },
+    "live_station": {
+      "name": "Live station",
+      "price": "350.00",
+      "per": "station",
+      "kinds": ["satay", "prata"],
+      "source": "reference/price-list-2026.pdf, page 1, Add-ons"
+    },
+    "service_staff": {
+      "name": "Service staff",
+      "price": "35.00",
+      "per": "staff per hour",
+      "minimum_hours": 3,
+      "source": "reference/price-list-2026.pdf, page 1, Add-ons"
+    }
+  },
+
+  "delivery": {
+    "zones": {
+      "standard": {
+        "name": "Standard delivery",
+        "where": "All other mainland addresses",
+        "charge": "35.00"
+      },
+      "cbd": {
+        "name": "CBD delivery",
+        "where": "Raffles Place, Marina Bay, Shenton Way, Tanjong Pagar, City Hall",
+        "charge": "45.00"
+      },
+      "sentosa_jurong": {
+        "name": "Sentosa and Jurong Island delivery",
+        "where": "Sentosa and Jurong Island",
+        "charge": "80.00"
+      }
+    },
+    "free_above_order_value": "800.00",
+    "order_value_means": "Packages plus add-ons, before delivery and GST.",
+    "source": "reference/price-list-2026.pdf, page 1, Delivery charges (the S$600 in reference/ops-meeting-notes-2026-08.md was never confirmed)",
+    "repeat_corporate": {
+      "free_delivery": true,
+      "excluded_zones": ["sentosa_jurong"],
+      "definition": "A corporate client with three or more orders in the last six months.",
+      "source": "reference/exception-memo-siti-2026-03.md"
+    }
+  },
+
+  "gst_rate": "0.09",
+  "deposit_rate": "0.30",
+  "rounding": "GST and deposit are each rounded to the nearest cent, half a cent rounds up.",
+  "tax_source": "reference/price-list-2026.pdf, page 1, notes under Delivery charges",
+
+  "quote_valid_days": 14,
+  "quote_valid_source": "design/quotation-design-checklist.md, J2",
+
+  "terms": {
+    "2024": { "file": "terms-2024.md", "status": "superseded" },
+    "2025": { "file": "terms-2025.md", "status": "superseded" },
+    "2026": {
+      "file": "terms-2026.md",
+      "status": "in_force",
+      "cancellation_plain": "Cancel at least 3 working days before the event and we refund your deposit in full. Cancel 1 to 2 working days before and the deposit is kept. Cancel on the day of the event and the full order value is charged. Working days are Monday to Friday, excluding Singapore public holidays.",
+      "cancellation_source": "reference/terms-2026.md, section 3"
+    },
+    "2027": { "file": "terms-2027.md", "status": "draft" },
+    "for_draft_years": "Cite the latest in-force terms and say that the event year's terms are still a draft (decided 3 Nov 2026)."
+  }
+}

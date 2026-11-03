@@ -1,0 +1,28 @@
+{
+  "source": "inputs/harbourline-town-hall-enquiry.txt",
+  "enquiry": {
+    "customer_name": "Mei Ling",
+    "company": "Harbourline Insurance",
+    "issue_date": "2026-11-03",
+    "event_date": "2026-12-11",
+    "headcount": 120,
+    "package": "classic_buffet",
+    "live_stations": 1,
+    "live_station_kind": "satay",
+    "service_staff": 2,
+    "service_hours": 4,
+    "delivery_zone": "cbd",
+    "delivery_address": "Raffles Place office",
+    "repeat_corporate": false,
+    "confirm_items": ["Headcount: the enquiry says about 120 pax. Please confirm the final number."]
+  },
+  "expected": {
+    "order_value": "3846.00",
+    "delivery_charge": "0.00",
+    "gst": "346.14",
+    "total": "4192.14",
+    "deposit": "1257.64",
+    "balance": "2934.50",
+    "terms_file": "terms-2026.md"
+  }
+}
