@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enquiry Desk board</title>
+<style>
+  :root { --primary:#0F4C5C; --accent:#E09F3E; --bg:#FFF8EC; --ink:#1B1B1B; --muted:#6B7280; --line:#E5DCCB; --good:#2E7D32; --warn:#B26A00; --bad:#B3261E; --white:#fff; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--ink); }
+  header { background:var(--primary); color:#fff; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  header h1 { margin:0; font-size:20px; }
+  header span { font-size:13px; opacity:.85; }
+  main { padding:16px 20px; }
+  .cols { display:grid; grid-template-columns:repeat(5, minmax(170px, 1fr)); gap:12px; align-items:start; }
+  .col { background:rgba(255,255,255,.55); border:1px solid var(--line); border-radius:10px; padding:10px; min-height:120px; }
+  .col h2 { font-size:13px; margin:0 0 8px; text-transform:uppercase; letter-spacing:.04em; color:var(--primary); display:flex; justify-content:space-between; }
+  .card { background:var(--white); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:8px 10px; margin-bottom:8px; cursor:pointer; }
+  .card:hover, .card.sel { border-color:var(--primary); box-shadow:0 1px 6px rgba(0,0,0,.12); }
+  .card b { display:block; }
+  .card small { color:var(--muted); }
+  .tag { display:inline-block; font-size:11px; padding:1px 7px; border-radius:99px; background:var(--line); margin-top:4px; margin-right:4px; }
+  .tag.quote { background:#dff0e0; color:var(--good); } .tag.clarify { background:#fdebc8; color:var(--warn); } .tag.escalate { background:#f8d9d6; color:var(--bad); }
+  #detail { margin-top:18px; background:var(--white); border:1px solid var(--line); border-radius:10px; padding:16px; display:none; }
+  #detail h2 { margin:0 0 4px; color:var(--primary); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:14px; margin-top:12px; }
+  .box { border:1px solid var(--line); border-radius:8px; padding:10px; background:#fffdf8; }
+  .box h3 { margin:0 0 6px; font-size:13px; text-transform:uppercase; color:var(--muted); letter-spacing:.04em; }
+  pre { margin:0; white-space:pre-wrap; word-break:break-word; font:12.5px/1.45 ui-monospace, Menlo, Consolas, monospace; max-height:260px; overflow:auto; }
+  .none { color:var(--muted); font-style:italic; }
+  .panel { border:2px solid var(--accent); border-radius:10px; padding:12px; margin-top:14px; background:#fff; }
+  .panel h3 { margin:0 0 8px; color:var(--primary); }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+  select, input, button { font:inherit; padding:6px 10px; border-radius:6px; border:1px solid var(--muted); background:#fff; }
+  button { background:var(--primary); color:#fff; border-color:var(--primary); cursor:pointer; }
+  button:hover { filter:brightness(1.15); }
+  #msg { margin-top:8px; padding:8px 10px; border-radius:6px; display:none; }
+  #msg.err { display:block; background:#f8d9d6; color:var(--bad); } #msg.ok { display:block; background:#dff0e0; color:var(--good); }
+  .ok { color:var(--good); } .stale { color:var(--bad); }
+  footer { padding:10px 20px 24px; color:var(--muted); font-size:12.5px; }
+  @media (max-width: 900px) { .cols { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<header><h1>Heicoders Catering: Enquiry Desk</h1><span>Nothing is sent from this page. It records approvals only.</span></header>
+<main>
+  <div class="cols" id="cols"></div>
+  <section id="detail"></section>
+</main>
+<footer>Customer text is shown as plain text only. This board never runs anything it finds inside an enquiry.</footer>
+<script>
+// Every piece of customer-written text goes in with textContent, never innerHTML.
+let data = null, selected = null;
+const COLS = [
+  ["waiting", "Waiting"], ["progress", "In progress"], ["priya", "Needs Priya"], ["junwei", "Needs Jun Wei"], ["done", "Approved"]
+];
+const $ = (t, props = {}, kids = []) => { const e = document.createElement(t); Object.assign(e, props); kids.forEach(k => e.append(k)); return e; };
+
+function needs(e) {
+  const o = e.outcome;
+  if (!e.has_pack) return "waiting";
+  if (!o || !o.outcome) return "progress";
+  const a = e.approved;
+  if (o.outcome === "escalate" && o.owner === "Jun Wei") return (a.capacity_exception || a.extra_van) && (a.reply) ? "done" : (a.capacity_exception || a.extra_van ? "priya" : "junwei");
+  if (o.outcome === "escalate") return a.reply && a.reply.current ? "done" : "priya";
+  const replyOk = a.reply && a.reply.current, pdfOk = o.outcome !== "quote" || (a.quote_pdf && a.quote_pdf.current);
+  return replyOk && pdfOk ? "done" : "priya";
+}
+
+function render() {
+  const cols = document.getElementById("cols"); cols.replaceChildren();
+  COLS.forEach(([key, title]) => {
+    const items = data.enquiries.filter(e => needs(e) === key);
+    const col = $("div", { className: "col" }, [$("h2", {}, [$("span", { textContent: title }), $("span", { textContent: items.length })])]);
+    items.forEach(e => {
+      const card = $("div", { className: "card" + (selected === e.id ? " sel" : "") }, [
+        $("b", { textContent: e.id + (e.client ? " · " + e.client : "") }),
+        $("small", { textContent: e.files.join(", ") })
+      ]);
+      if (e.outcome && e.outcome.outcome) card.append($("span", { className: "tag " + e.outcome.outcome, textContent: e.outcome.outcome }));
+      card.onclick = () => { selected = e.id; render(); };
+      col.append(card);
+    });
+    cols.append(col);
+  });
+  renderDetail();
+}
+
+function box(title, content) {
+  const b = $("div", { className: "box" }, [$("h3", { textContent: title })]);
+  if (content === null || content === undefined) b.append($("div", { className: "none", textContent: "Not produced yet" }));
+  else b.append($("pre", { textContent: typeof content === "string" ? content : JSON.stringify(content, null, 2) }));
+  return b;
+}
+
+function renderDetail() {
+  const d = document.getElementById("detail");
+  const e = data && data.enquiries.find(x => x.id === selected);
+  if (!e) { d.style.display = "none"; return; }
+  d.style.display = "block"; d.replaceChildren();
+  d.append($("h2", { textContent: e.id + (e.client ? " · " + e.client : "") }));
+  d.append($("div", { className: "none", textContent: e.outcome && e.outcome.outcome ? "Outcome: " + e.outcome.outcome + (e.outcome.reason ? " (" + e.outcome.reason + ")" : "") : "No outcome recorded yet" }));
+  const g = $("div", { className: "grid" });
+  g.append(box("Event facts", e.event), box("Capacity", e.capacity), box("Menu check", e.menu), box("Quote (engine output)", e.quote), box("Draft reply", e.draft));
+  const pdfBox = $("div", { className: "box" }, [$("h3", { textContent: "Quote PDF" })]);
+  if (e.pdf) { const a = $("a", { href: e.pdf, target: "_blank", textContent: "Open " + e.id + ".pdf" }); pdfBox.append(a); } else pdfBox.append($("div", { className: "none", textContent: "No PDF" }));
+  g.append(pdfBox);
+  d.append(g);
+
+  const hist = Object.entries(e.approved);
+  const p = $("div", { className: "panel" }, [$("h3", { textContent: "Approval panel" })]);
+  if (hist.length) {
+    const ul = $("div");
+    hist.forEach(([act, r]) => ul.append($("div", { className: r.current ? "ok" : "stale", textContent: (r.current ? "Approved " : "Changed since approval: ") + data.labels[act] + " by " + r.by + " at " + r.at })));
+    p.append(ul);
+  }
+  const row = $("div", { className: "row" });
+  const action = $("select"); Object.entries(data.labels).forEach(([k, v]) => action.append($("option", { value: k, textContent: "Approve: " + v })));
+  const who = $("select"); data.people.forEach(n => who.append($("option", { value: n, textContent: n })));
+  const note = $("input", { placeholder: "Note (optional)", size: 30 });
+  const btn = $("button", { textContent: "Approve" });
+  const msg = $("div", { id: "msg" });
+  btn.onclick = async () => {
+    const r = await fetch("/api/approve", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ enquiry: e.id, action: action.value, approver: who.value, note: note.value }) });
+    const j = await r.json();
+    msg.className = r.ok ? "ok" : "err"; msg.textContent = r.ok ? "Recorded." : j.error;
+    if (r.ok) await load(false);
+  };
+  row.append($("span", { textContent: "I am" }), who, action, note, btn);
+  p.append(row, msg);
+  d.append(p);
+}
+
+async function load(rerender = true) {
+  const r = await fetch("/api/state"); data = await r.json();
+  const keepMsg = document.getElementById("msg"); const m = keepMsg ? [keepMsg.className, keepMsg.textContent] : null;
+  render();
+  if (m) { const n = document.getElementById("msg"); if (n) { n.className = m[0]; n.textContent = m[1]; } }
+}
+load();
+setInterval(() => { if (!document.activeElement || !["SELECT", "INPUT"].includes(document.activeElement.tagName)) load(); }, 4000);
+</script>
+</body>
+</html>
