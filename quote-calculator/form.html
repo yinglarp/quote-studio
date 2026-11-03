@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quote Studio</title>
+<style>
+  @font-face { font-family: Roboto; font-weight: 400; src: url(/fonts/roboto-400.ttf); }
+  @font-face { font-family: Roboto; font-weight: 500; src: url(/fonts/roboto-500.ttf); }
+  @font-face { font-family: Roboto; font-weight: 700; src: url(/fonts/roboto-700.ttf); }
+  /* Colours from design/design-tokens.json */
+  :root { --primary:#0F4C5C; --accent:#E09F3E; --cream:#FFF8EC; --ink:#1B1B1B; --muted:#6B7280;
+          --line:#E5DCCB; --good:#2E7D32; --warning:#B26A00; --bad:#B3261E; --white:#FFFFFF; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Roboto, Arial, sans-serif; color: var(--ink); background: var(--cream); }
+  header { background: var(--primary); color: var(--white); padding: 12px 24px; display: flex; align-items: center; gap: 14px; }
+  header img { height: 40px; background: var(--white); border-radius: 50%; }
+  header h1 { font-size: 20px; margin: 0; font-weight: 700; }
+  header span { opacity: .8; font-size: 13px; }
+  main { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; padding: 24px; max-width: 1200px; margin: 0 auto; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  section { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+  h2 { font-size: 15px; color: var(--primary); margin: 18px 0 10px; text-transform: uppercase; letter-spacing: .04em; }
+  h2:first-child { margin-top: 0; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 10px; }
+  label small { display: block; font-weight: 400; color: var(--muted); margin-top: 2px; }
+  input, select, textarea { width: 100%; margin-top: 4px; padding: 8px 10px; font: inherit; font-size: 14px;
+    border: 1px solid #cfc6b5; border-radius: 6px; background: var(--white); }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .check { display: flex; gap: 8px; align-items: flex-start; font-weight: 500; }
+  .check input { width: auto; margin-top: 2px; }
+  textarea { min-height: 76px; resize: vertical; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td { padding: 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.amt { text-align: right; white-space: nowrap; font-weight: 500; }
+  .note { display: block; font-size: 12px; color: var(--muted); }
+  .total { background: var(--primary); color: var(--white); border-radius: 6px; padding: 10px 14px; display: flex;
+    justify-content: space-between; align-items: center; margin: 12px 0 6px; font-weight: 700; }
+  .total b { font-size: 24px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .msg { border-radius: 6px; padding: 10px 12px; font-size: 14px; margin-bottom: 12px; }
+  .msg.error { background: #fbeaea; border: 1px solid var(--bad); color: var(--bad); }
+  .msg.warn { background: var(--cream); border: 1px solid var(--accent); color: var(--warning); }
+  .msg.ok { background: #eaf4ea; border: 1px solid var(--good); color: var(--good); }
+  button { font: inherit; font-weight: 700; font-size: 15px; padding: 12px 18px; border-radius: 6px; border: 0;
+    background: var(--accent); color: var(--ink); cursor: pointer; width: 100%; margin-top: 12px; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  a { color: var(--primary); font-weight: 700; }
+</style>
+</head>
+<body>
+<header>
+  <img src="/logo.png" alt="Heicoders Catering logo">
+  <div><h1>Quote Studio</h1><span>Heicoders Catering · runs only on this computer</span></div>
+</header>
+<main>
+  <section>
+    <form id="f" autocomplete="off">
+      <h2>Customer</h2>
+      <div class="row">
+        <label>Customer name<input name="customer_name" required></label>
+        <label>Company <small>Leave blank for families</small><input name="company"></label>
+      </div>
+
+      <h2>Event</h2>
+      <div class="row">
+        <label>Event date<input name="event_date" type="date" required></label>
+        <label>Headcount (pax)<input name="headcount" type="number" min="1" required></label>
+      </div>
+      <label>Package<select name="package" id="package" required></select></label>
+
+      <h2>Add-ons</h2>
+      <label class="check"><input type="checkbox" name="extra_dessert"> Extra dessert (kueh lapis), for every guest</label>
+      <div class="row">
+        <label>Live stations<input name="live_stations" type="number" min="0" value="0"></label>
+        <label>Station type<select name="live_station_kind" id="kinds"></select></label>
+      </div>
+      <div class="row">
+        <label>Service staff (people)<input name="service_staff" type="number" min="0" value="0"></label>
+        <label>Hours each <small id="minhours"></small><input name="service_hours" type="number" min="0" step="0.5" value="0"></label>
+      </div>
+
+      <h2>Delivery</h2>
+      <label>Delivery zone<select name="delivery_zone" id="zone" required></select><small id="where"></small></label>
+      <label>Delivery address<input name="delivery_address" placeholder="e.g. Raffles Place office"></label>
+      <label class="check"><input type="checkbox" name="repeat_corporate">
+        <span>Repeat corporate client <small id="rcdef"></small></span></label>
+
+      <h2>Please confirm</h2>
+      <label>Anything you had to guess from the enquiry, one per line
+        <small>Printed in a box on the quote so the customer can confirm it.</small>
+        <textarea name="confirm_items" placeholder="Headcount: the enquiry says about 120 pax. Please confirm the final number."></textarea>
+      </label>
+    </form>
+  </section>
+
+  <section aria-live="polite">
+    <h2>Quote preview</h2>
+    <div id="msg"></div>
+    <div id="preview" class="muted">Fill in the form to see the price.</div>
+    <button id="make" disabled>Make PDF quote</button>
+  </section>
+</main>
+
+<script>
+const f = document.getElementById('f');
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let opts;
+
+function formData() {
+  const d = Object.fromEntries(new FormData(f));
+  d.extra_dessert = f.extra_dessert.checked;
+  d.repeat_corporate = f.repeat_corporate.checked;
+  return d;
+}
+
+async function post(url) {
+  const r = await fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(formData()) });
+  return [r.ok, await r.json()];
+}
+
+function showMsg(kind, html) { $('msg').innerHTML = html ? `<div class="msg ${kind}">${html}</div>` : ''; }
+
+function render(q) {
+  let rows = q.lines.map(l => `<tr><td>${esc(l.description)}</td><td class="amt">${esc(l.amount)}</td></tr>`).join('');
+  rows += `<tr><td>Delivery${q.delivery_note ? `<span class="note">${esc(q.delivery_note)}</span>` : ''}</td><td class="amt">${esc(q.delivery)}</td></tr>`;
+  rows += `<tr><td>Subtotal (before GST)</td><td class="amt">${esc(q.subtotal)}</td></tr>`;
+  rows += `<tr><td>GST</td><td class="amt">${esc(q.gst)}</td></tr>`;
+  const confirm = q.confirm_items.length
+    ? `<p class="muted"><b>Customer will be asked to confirm:</b><br>${q.confirm_items.map(esc).join('<br>')}</p>` : '';
+  $('preview').innerHTML = `
+    <p class="muted">${esc(q.quote_number)} · Event ${esc(q.event_date)} · Valid until ${esc(q.valid_until)}</p>
+    <table>${rows}</table>
+    <div class="total"><span>TOTAL</span><b>${esc(q.total)}</b></div>
+    <table><tr><td>Deposit, due on confirmation</td><td class="amt">${esc(q.deposit)}</td></tr>
+           <tr><td>Balance, after the event</td><td class="amt">${esc(q.balance)}</td></tr></table>
+    <p class="muted">Terms cited: ${esc(q.terms_file)}</p>${confirm}`;
+  showMsg('warn', q.terms_note ? esc(q.terms_note) : '');
+}
+
+let timer;
+async function preview() {
+  clearTimeout(timer);
+  timer = setTimeout(async () => {
+    try {
+      const [ok, data] = await post('/api/preview');
+      $('make').disabled = !ok;
+      if (ok) render(data);
+      else { $('preview').innerHTML = ''; showMsg('error', esc(data.error)); }
+    } catch { showMsg('error', 'Quote Studio has stopped. Double-click Start-Quote-Studio again.'); }
+  }, 250);
+}
+
+$('make').addEventListener('click', async () => {
+  $('make').disabled = true;
+  const [ok, data] = await post('/api/make');
+  $('make').disabled = false;
+  if (!ok) return showMsg('error', esc(data.error));
+  render(data);
+  showMsg('ok', `PDF saved: ${esc(data.saved_to)}<br><a href="${esc(data.pdf_url)}" target="_blank">Open the quote</a>`);
+  window.open(data.pdf_url, '_blank');
+});
+
+function showZone() {
+  const z = opts.zones.find(z => z.key === $('zone').value);
+  $('where').textContent = z ? z.where : '';
+}
+
+(async () => {
+  const r = await fetch('/api/options');
+  opts = await r.json();
+  if (!r.ok) return showMsg('error', esc(opts.error));
+  $('package').innerHTML = '<option value="">Choose a package</option>' + opts.packages.map(p =>
+    `<option value="${p.key}">${esc(p.name)} (min ${p.minimum} ${p.unit === 'box' ? 'boxes' : 'pax'})</option>`).join('');
+  $('kinds').innerHTML = opts.station_kinds.map(k => `<option value="${k}">${k[0].toUpperCase() + k.slice(1)}</option>`).join('');
+  $('zone').innerHTML = '<option value="">Choose a zone</option>' + opts.zones.map(z => `<option value="${z.key}">${esc(z.name)}</option>`).join('');
+  $('minhours').textContent = `Minimum ${opts.staff_min_hours} hours each`;
+  $('rcdef').textContent = opts.repeat_corporate_definition;
+  $('zone').addEventListener('change', showZone);
+  f.addEventListener('input', preview);
+  f.addEventListener('change', preview);
+})();
+</script>
+</body>
+</html>
