@@ -1,0 +1,25 @@
+# --- Confidential: never commit ---
+staff/
+reference/costing-and-margins.xlsx
+
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Generated files ---
+outputs/
+
+# --- OS clutter ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Office lock/temp files ---
+~$*
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/

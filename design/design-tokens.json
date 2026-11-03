@@ -1,0 +1,13 @@
+{
+  "brand": "Heicoders Catering",
+  "note": "Fictional brand for the GA200 course. Colours and fonts are the house design used by every Heicoders Catering document.",
+  "colours": {"primary": "#0F4C5C", "accent": "#E09F3E", "background": "#FFF8EC", "ink": "#1B1B1B", "muted": "#6B7280", "line": "#E5DCCB",
+              "good": "#2E7D32", "warning": "#B26A00", "bad": "#B3261E", "white": "#FFFFFF"},
+  "fonts": {"slides_heading": "Georgia", "slides_body": "Calibri", "web_and_pdf": "Roboto (bundled in fonts/, OFL licence)"},
+  "logo": "heicoders-catering-logo.png",
+  "rules": ["Dates are written out in full (14 Sep 2026), never 14/09 or 09/14.",
+            "Money is S$ with two decimals and a thousands separator (S$4,192.14).",
+            "Every figure on a deck, page or document carries its source (file name, and row or page).",
+            "Fictional data is labelled: footer reads 'Fictional case data, GA200'.",
+            "No cost, margin or staff wording on anything a customer sees."]
+}
