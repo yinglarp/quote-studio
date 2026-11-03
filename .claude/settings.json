@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(./**)"
+    ],
+    "ask": [
+      "Bash(git push*)",
+      "PowerShell(git push*)",
+      "Bash(gh repo create * --push*)",
+      "PowerShell(gh repo create * --push*)"
+    ],
+    "deny": [
+      "Read(**/staff)",
+      "Read(**/staff/**)",
+      "Edit(**/staff/**)",
+      "Read(**/reference/costing-and-margins.xlsx)",
+      "Edit(**/reference/costing-and-margins.xlsx)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * --force*)",
+      "Bash(git push * -f*)",
+      "PowerShell(git push --force*)",
+      "PowerShell(git push -f*)",
+      "PowerShell(git push * --force*)",
+      "PowerShell(git push * -f*)",
+      "Bash(gh repo delete*)",
+      "PowerShell(gh repo delete*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.js\"",
+            "timeout": 10,
+            "onFailure": "block",
+            "statusMessage": "Checking project rules"
+          }
+        ]
+      }
+    ]
+  }
+}
