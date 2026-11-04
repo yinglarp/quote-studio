@@ -1,0 +1,23 @@
+{
+  "enquiry_id": "enq-03",
+  "received": "2026-10-15T11:12",
+  "client": "Bayfront Dental Group",
+  "date": "2026-11-20",
+  "pax": 60,
+  "package": "premium_buffet",
+  "zone": "cbd",
+  "venue": "10 Bayfront Avenue, Marina Bay",
+  "add_ons": {"live_stations": 0, "extra_dessert": false, "staff": 0, "staff_hours": 0},
+  "repeat_client": false,
+  "dietary": {
+    "halal": true,
+    "vegetarian_guests": 8,
+    "allergies": [
+      {"allergen": "peanut", "guests": 2, "severity": "severe"}
+    ]
+  },
+  "special_requests": "make sure the buffet is safe for the 2 peanut-allergic guests",
+  "suspicious_content": null,
+  "field_status": {"date": "verified", "pax": "verified", "package": "verified", "zone": "verified", "venue": "verified", "add_ons": "verified", "dietary": "verified"},
+  "open_questions": []
+}

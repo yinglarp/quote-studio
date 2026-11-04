@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "event.json",
+  "description": "Reader to Capacity, Menu and Drafter. design/contracts.md, section 1.",
+  "type": "object",
+  "required": ["enquiry_id", "received", "client", "date", "pax", "package", "venue", "zone", "add_ons",
+               "repeat_client", "dietary", "special_requests", "suspicious_content", "field_status", "open_questions"],
+  "additionalProperties": false,
+  "properties": {
+    "enquiry_id": {"type": "string", "pattern": "^enq-\\d\\d$"},
+    "received": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"},
+    "client": {"type": ["string", "null"], "maxLength": 80},
+    "date": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "pax": {"type": ["integer", "null"], "minimum": 1},
+    "package": {"enum": ["bento_classic", "bento_premium", "mini_buffet", "classic_buffet", "premium_buffet", null]},
+    "venue": {"type": ["string", "null"], "maxLength": 120},
+    "zone": {"enum": ["cbd", "sentosa", "jurong_island", "standard", null]},
+    "add_ons": {
+      "type": ["object", "null"],
+      "required": ["live_stations", "extra_dessert", "staff", "staff_hours"],
+      "additionalProperties": false,
+      "properties": {
+        "live_stations": {"type": "integer", "minimum": 0},
+        "extra_dessert": {"type": "boolean"},
+        "staff": {"type": "integer", "minimum": 0},
+        "staff_hours": {"type": "number", "minimum": 0}
+      }
+    },
+    "repeat_client": {"const": false},
+    "dietary": {
+      "type": ["object", "null"],
+      "required": ["halal", "vegetarian_guests", "allergies"],
+      "additionalProperties": false,
+      "properties": {
+        "halal": {"type": ["boolean", "null"]},
+        "vegetarian_guests": {"type": ["integer", "null"], "minimum": 0},
+        "allergies": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "object",
+            "required": ["allergen", "guests", "severity"],
+            "additionalProperties": false,
+            "properties": {
+              "allergen": {"type": "string", "maxLength": 40},
+              "guests": {"type": ["integer", "null"], "minimum": 1},
+              "severity": {"type": "string", "maxLength": 20}
+            }
+          }
+        }
+      }
+    },
+    "special_requests": {"type": ["string", "null"], "maxLength": 160},
+    "suspicious_content": {"type": ["string", "null"], "maxLength": 160},
+    "field_status": {
+      "type": "object",
+      "required": ["date", "pax", "package", "zone", "add_ons", "dietary"],
+      "additionalProperties": {"enum": ["verified", "assumed", "missing"]}
+    },
+    "open_questions": {"type": "array", "items": {"type": "string", "maxLength": 200}}
+  }
+}

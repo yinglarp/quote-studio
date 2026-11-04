@@ -1,0 +1,20 @@
+{
+  "enquiry_id": "enq-05",
+  "received": "2026-10-18T09:05",
+  "client": "Tanjong Pagar Tech Hub",
+  "date": "2026-11-06",
+  "pax": 50,
+  "package": "classic_buffet",
+  "zone": "cbd",
+  "venue": "Tanjong Pagar Tech Hub, 20 Tanjong Pagar Road",
+  "add_ons": {"live_stations": 0, "extra_dessert": false, "staff": 0, "staff_hours": 0},
+  "repeat_client": false,
+  "dietary": null,
+  "special_requests": null,
+  "suspicious_content": null,
+  "field_status": {"date": "verified", "pax": "verified", "package": "verified", "zone": "assumed", "venue": "verified", "add_ons": "verified", "dietary": "missing"},
+  "open_questions": [
+    "Dietary needs are not stated. Ask whether any guests need halal or vegetarian meals, and whether any guests have allergies (allergen, number of guests, severity).",
+    "Confirm the delivery address falls in the CBD delivery zone (Tanjong Pagar Road)."
+  ]
+}

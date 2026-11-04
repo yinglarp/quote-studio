@@ -1,0 +1,14 @@
+{
+  "package": "classic_buffet",
+  "halal": true,
+  "vegetarian_guests": null,
+  "vegetarian_dishes": 3,
+  "clashes": [],
+  "shared_kitchen_note": false,
+  "verdict": "FLAG",
+  "dietary_status": "missing",
+  "open_questions": [
+    "Are there any dietary requirements among the 40 guests, including allergies, halal or vegetarian guests?",
+    "If any guest has an allergy, which allergen is it, how many guests are affected, and how severe is it?"
+  ]
+}

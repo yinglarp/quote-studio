@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-06",
+  "booked": 17,
+  "held": 0,
+  "limit": 18,
+  "free_slots": 1,
+  "status": "has_room",
+  "alternatives": [],
+  "date_status": "verified",
+  "open_questions": []
+}

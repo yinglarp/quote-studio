@@ -1,0 +1,20 @@
+{
+  "enquiry_id": "enq-04",
+  "received": "2026-10-17T15:20",
+  "client": "Orchard Row Law",
+  "date": "2026-11-06",
+  "pax": 40,
+  "package": "classic_buffet",
+  "zone": "standard",
+  "venue": "88 Orchard Road, level 12",
+  "add_ons": {"live_stations": 0, "extra_dessert": false, "staff": 0, "staff_hours": 0},
+  "repeat_client": false,
+  "dietary": null,
+  "special_requests": null,
+  "suspicious_content": null,
+  "field_status": {"date": "verified", "pax": "verified", "package": "verified", "zone": "assumed", "venue": "verified", "add_ons": "verified", "dietary": "missing"},
+  "open_questions": [
+    "Dietary needs for the 40 guests are not stated. Ask whether there are any dietary requirements, allergies or halal or vegetarian guests.",
+    "Zone is inferred from the address. Orchard Road is not on the CBD list, so it is read as standard. Confirm the address is in the standard zone."
+  ]
+}

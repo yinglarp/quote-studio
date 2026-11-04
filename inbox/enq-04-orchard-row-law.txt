@@ -1,0 +1,14 @@
+From: Daniel Koh <daniel.koh@orchardrowlaw.example>
+To: Heicoders Catering Sales and Events <enquiries@heicoderscatering.example>
+Date: Sat, 17 Oct 2026 15:20
+Subject: Lunch for our client briefing, Friday 6 November
+
+Hello Priya,
+
+Our firm is hosting a client briefing on Friday 6 November 2026 at our office, 88 Orchard Road, level 12. We'd like a Classic Buffet lunch for 40 people. No add-ons are needed.
+
+Please send us a quote and let us know whether the date is available.
+
+Regards,
+Daniel Koh
+Office Manager, Orchard Row Law (a fictional company for the GA200 course)

@@ -1,13 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Edit(./**)"
+      "Edit(/desk/packs/**)",
+      "Edit(/outputs/drafts/**)",
+      "Edit(/outputs/quotes/**)",
+      "Edit(/outputs/open-items.md)",
+      "Edit(/outputs/run-log.md)"
     ],
     "ask": [
-      "Bash(git push*)",
-      "PowerShell(git push*)",
-      "Bash(gh repo create * --push*)",
-      "PowerShell(gh repo create * --push*)"
+      "Bash",
+      "PowerShell",
+      "Edit(/design/**)",
+      "Edit(/CLAUDE.md)",
+      "Edit(/.claude/**)",
+      "Edit(/human-role.md)"
     ],
     "deny": [
       "Read(**/staff)",
@@ -15,6 +21,13 @@
       "Edit(**/staff/**)",
       "Read(**/reference/costing-and-margins.xlsx)",
       "Edit(**/reference/costing-and-margins.xlsx)",
+      "Edit(/quote-calculator/**)",
+      "Edit(/inbox/**)",
+      "Edit(/reference/**)",
+      "Edit(/desk/bookings.csv)",
+      "Edit(/desk/desk-rules.md)",
+      "Edit(/desk/allowed-values.md)",
+      "Edit(/desk/menu-and-dietary.md)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
       "Bash(git push * --force*)",
@@ -38,6 +51,18 @@
             "timeout": 10,
             "onFailure": "block",
             "statusMessage": "Checking project rules"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/desk_stop.py\"",
+            "timeout": 300,
+            "statusMessage": "Validating the Desk run"
           }
         ]
       }
