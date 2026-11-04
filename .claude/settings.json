@@ -54,6 +54,18 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/desk_stop.py\"",
+            "timeout": 300,
+            "statusMessage": "Validating the Desk run"
+          }
+        ]
+      }
     ]
   }
 }
