@@ -1,0 +1,18 @@
+{
+  "package": "premium_buffet",
+  "halal": true,
+  "vegetarian_guests": 8,
+  "vegetarian_dishes": 7,
+  "clashes": [
+    {
+      "allergen": "peanut",
+      "guests": 2,
+      "severity": "severe",
+      "dishes": ["Mee goreng", "Chicken satay with satay sauce"]
+    }
+  ],
+  "shared_kitchen_note": true,
+  "verdict": "FLAG",
+  "dietary_status": "verified",
+  "open_questions": []
+}
