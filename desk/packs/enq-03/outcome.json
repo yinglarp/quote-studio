@@ -1,3 +1,9 @@
-{"enquiry_id": "enq-03", "outcome": "escalate", "received": "2026-10-15T11:12",
- "date": "2026-11-20", "holds_date": false, "owner": "Priya",
- "reason": "Premium Buffet has peanut in mee goreng and satay; 2 guests have a severe peanut allergy."}
+{
+  "enquiry_id": "enq-03",
+  "outcome": "escalate",
+  "received": "2026-10-15T11:12",
+  "date": "2026-11-20",
+  "holds_date": false,
+  "owner": "Priya",
+  "reason": "Severe peanut allergy for 2 guests clashes with Mee goreng and Chicken satay with satay sauce in the premium buffet."
+}
