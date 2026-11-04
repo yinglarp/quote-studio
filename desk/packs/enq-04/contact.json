@@ -1,0 +1,10 @@
+{
+  "name": "Daniel Koh",
+  "email": "daniel.koh@orchardrowlaw.example",
+  "phone": null,
+  "company": "Orchard Row Law",
+  "field_status": {"name": "verified", "email": "verified", "phone": "missing", "company": "verified"},
+  "open_questions": [
+    "No phone number is given. Ask Daniel Koh for a contact phone number."
+  ]
+}
