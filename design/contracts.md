@@ -1,13 +1,13 @@
 # Enquiry Desk handover contracts
 
-Every file one Desk agent hands to another. Each lives in `desk/packs/enq-NN/`.
+Every file one step of the Desk hands to another: the agents, the quote engine and the main session's decision. Each lives in `desk/packs/enq-NN/`.
 
 ## Rules for every handover
 
 - **Fixed fields.** Every listed field is always present. Unknown means `null`, never left out.
 - **Short values.** A date (`YYYY-MM-DD`), a time (`YYYY-MM-DDTHH:MM`), a number, a name, an allowed value or a short phrase. Never a pasted paragraph or a quoted email.
 - **Status.** Fields marked *Status: yes* get an entry in `field_status`: `verified` (the source states it plainly), `assumed` (interpreted) or `missing` (not given, value `null`).
-- **Open questions.** Each file has one `open_questions` list. One short question per item, in plain words. The Drafter is the only agent that turns them into a reply.
+- **Open questions.** Each agent file (1 to 4) has one `open_questions` list. `quote.json` and `outcome.json` have none. One short question per item, in plain words. The Drafter is the only agent that turns them into a reply.
 - **No new facts.** An agent passes on only what its source says. Anything else goes in `open_questions`.
 
 | # | File | From | To |
@@ -17,6 +17,7 @@ Every file one Desk agent hands to another. Each lives in `desk/packs/enq-NN/`.
 | 3 | `capacity.json` | Capacity | Drafter |
 | 4 | `menu.json` | Menu | Drafter |
 | 5 | `quote.json` | Quote engine | Drafter |
+| 6 | `outcome.json` | Main session | Drafter, Desk board, `desk/validate_desk.py` |
 
 ---
 
@@ -125,3 +126,35 @@ This is the engine's output, saved **unchanged**. No agent edits it. `validate_d
 **Exceptions to the short-field rule.** `cancellation_plain` is a full clause. The Drafter quotes it word for word from `rates.json` and never writes or edits it. `lines` is a list, but every item in it is short.
 
 **2027 events.** `terms_note` says the 2027 terms are a draft. Under `CLAUDE.md`, the Desk must also ask the user which terms to cite before the quote goes out.
+
+## 6. `outcome.json`: Main session to Drafter, board and validator
+
+The Desk's decision for one enquiry. It is the only file that records whether a date is held, so it is what Rules 1 and 3 are checked on. The fields match `desk/desk-rules.md`, section 4.
+
+| Field | Type | Status | Source |
+|---|---|---|---|
+| `enquiry_id` | `enq-NN` | no | `event.json` `enquiry_id` |
+| `outcome` | `quote`, `clarify` or `escalate` | no | Decided from the files above (see the table below) |
+| `received` | `YYYY-MM-DDTHH:MM` | no | `event.json` `received` |
+| `date` | `YYYY-MM-DD` or `null` | no (inherits `event.json`) | `event.json` `date` |
+| `holds_date` | `true` only when `outcome` is `quote` | no | Follows `outcome` |
+| `reason` | Short phrase. Required for `clarify` and `escalate`. | no | The deciding field, e.g. `capacity.json` `status: full` |
+| `owner` | `Priya` or `Jun Wei`. Present only for `escalate`. | no | `desk/desk-rules.md`, sections 2 and 3 |
+
+**How the outcome is decided.** Work down the table and stop at the first row that applies.
+
+| Check | Outcome | `owner` |
+|---|---|---|
+| `capacity.json` `status` is `full` | `escalate` | `Jun Wei` |
+| `menu.json` `clashes` is not empty | `escalate` | `Priya` |
+| Any `event.json` `field_status` is `assumed` or `missing`, or an earlier file has `open_questions` | `clarify` | - |
+| `quote.json` `status` is `refused` | `clarify` (e.g. below the minimum order) | - |
+| None of the above | `quote` | - |
+
+**Status.** None. Every value is copied or decided from a file that already has its own status.
+
+**Open questions.** None here. They stay in the files they came from, and the Drafter collects them for a `clarify` reply. `reason` is a single short phrase for Priya or Jun Wei, not a question to the customer.
+
+**What a later step checks.**
+- Rule 1, at most 18 jobs per date: the validator counts each `date` where `holds_date` is `true`, adds the bookings for that date, and uses `received` to decide which enquiry keeps the last slot.
+- Rule 3, every enquiry is accounted for: `outcome` is one of the three values, `reason` is present for `clarify` and `escalate`, and `owner` is present for `escalate`.
