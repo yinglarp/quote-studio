@@ -6,6 +6,7 @@ Runs when the main session tries to finish. Does nothing unless this session ran
 
   1. python desk/validate_desk.py        (the packs in desk/packs/)
   2. python desk/check_inputs_unchanged.py
+  3. python .claude/hooks/desk_tests.py --level all   (pytest desk/tests: unit, integration, e2e)
 
 Both pass   -> allow the stop, reset the failure count.
 A check fails, 1st time in a row -> block the stop and hand the check's message back to the Desk.
@@ -72,6 +73,20 @@ def run_check(root, script):
     return f"{script} failed (exit {r.returncode}):\n{out or '(no output)'}"
 
 
+def run_desk_tests(root):
+    """Run every level of desk/tests (unit, integration, e2e). Returns None on pass, or the failures."""
+    runner = root / ".claude/hooks/desk_tests.py"
+    if not runner.exists():
+        return None
+    try:
+        r = subprocess.run([sys.executable, str(runner), "--level", "all"], cwd=str(root),
+                           capture_output=True, text=True, timeout=CHECK_TIMEOUT,
+                           env={**os.environ, "CLAUDE_PROJECT_DIR": str(root)})
+    except subprocess.TimeoutExpired:
+        return f"desk/tests did not finish within {CHECK_TIMEOUT} seconds."
+    return None if r.returncode == 0 else (r.stderr.strip() or r.stdout.strip() or "desk/tests failed (no output)")
+
+
 def load_state(path):
     try:
         return json.loads(path.read_text())
@@ -111,7 +126,8 @@ def main():
         return 0  # not a Desk run: let the session finish
 
     failures = [m for m in (run_check(root, "desk/validate_desk.py"),
-                            run_check(root, "desk/check_inputs_unchanged.py")) if m]
+                            run_check(root, "desk/check_inputs_unchanged.py"),
+                            run_desk_tests(root)) if m]
 
     state_path = root / "desk/.stop-hook-state.json"
     state = load_state(state_path)
