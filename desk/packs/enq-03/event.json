@@ -12,12 +12,10 @@
   "dietary": {
     "halal": true,
     "vegetarian_guests": 8,
-    "allergies": [
-      {"allergen": "peanut", "guests": 2, "severity": "severe"}
-    ]
+    "allergies": [{"allergen": "peanut", "guests": 2, "severity": "severe"}]
   },
-  "special_requests": "make sure the buffet is safe for the 2 peanut-allergic guests",
+  "special_requests": null,
   "suspicious_content": null,
-  "field_status": {"date": "verified", "pax": "verified", "package": "verified", "zone": "verified", "venue": "verified", "add_ons": "verified", "dietary": "verified"},
-  "open_questions": []
+  "field_status": {"date": "verified", "pax": "verified", "package": "verified", "zone": "verified", "venue": "verified", "add_ons": "assumed", "dietary": "verified"},
+  "open_questions": ["Does the customer want any add-ons (live stations, extra dessert, or staff)?"]
 }
