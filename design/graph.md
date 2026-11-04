@@ -28,9 +28,10 @@ How one batch of enquiries in `inbox/` moves through the Desk, from the raw mess
 | N8 | **Decide** | Main session | Everything in the pack, holds already granted in this batch | `outcome.json` |
 | N9 | **Quote PDF** (only for `quote`) | Code: `quote-calculator/make_quote.py` / `pdf.py` | `quote.json` data, `design/` tokens, fonts and logo | `outputs/quotes/enq-NN.pdf` |
 | N10 | **Drafter** (one per enquiry) | Agent: `drafter` (sonnet) | The six pack JSON files only (`quote.json` only for `quote`) | `outputs/drafts/enq-NN-reply.md` |
+| N10a | **Checker** (one per enquiry, after its Drafter) | Agent: `checker` (opus), review only | The draft reply, the original `inbox/enq-NN-*.txt`, every file in the pack, `desk/desk-rules.md`, `desk/menu-and-dietary.md`, `desk/allowed-values.md`, `design/contracts.md`, the terms file in force on the event date | An evidence table and `VERIFIED COMPLETE`, or `FIX-n` / `NEEDS INFO-n` / `NEEDS DECISION-n` items, saved by the main session as `outputs/checks/enq-NN-check.md` |
 | N11 | **Batch validation** | Code: `desk/validate_desk.py --complete`, then `desk/check_inputs_unchanged.py` | All `desk/packs/*`, `desk/bookings.csv`, `outputs/quotes/`, `outputs/drafts/`, `scripts/quote_check.py`, the snapshot | Exit 0 (pass) or 1 (fail, with one line per problem) |
-| N12 | **Summarise** | Main session | All packs, validation output | `outputs/open-items.md`, `outputs/run-log.md` |
-| P1 | **Priya Menon**, Sales and Events Lead | Person | Draft replies, quote PDFs, `menu.json` clashes, `suspicious_content`, `open-items.md` | Board approvals `reply` and `quote_pdf` in `desk/approvals.json`; menu decisions after checking with Chef Hafiz |
+| N12 | **Summarise** | Main session | All packs, Checker reports, validation output | `outputs/open-items.md`, `outputs/run-log.md` |
+| P1 | **Priya Menon**, Sales and Events Lead | Person | Draft replies, quote PDFs, Checker reports, `menu.json` clashes, `suspicious_content`, `open-items.md` | Board approvals `reply` and `quote_pdf` in `desk/approvals.json`; menu decisions after checking with Chef Hafiz |
 | P2 | **Jun Wei Tan**, Logistics Coordinator | Person | Escalations with `owner: "Jun Wei"`, their `capacity.json` | Board approvals `capacity_exception` and `extra_van` in `desk/approvals.json`; any change to `bookings.csv` |
 | P3 | **Chef Hafiz Osman** (advises, does not approve on the board) | Person | Priya's question about a dish | Advice to Priya before any menu change |
 | U | **The user** (runs the Desk) | Person | Questions the main session cannot settle | Answers on terms for 2027 events, pack ids, unreadable files, validator failures that need a code change |
@@ -47,12 +48,12 @@ These are the only way information passes between steps. An agent never sees ano
 
 | File | Written by | Read by | Key routing fields |
 |---|---|---|---|
-| `event.json` | N2 Reader (saved by main session) | N4, N5, N6, N7, N8, N10, N11 | `date`, `received`, `field_status.*`, `open_questions`, `suspicious_content` |
-| `contact.json` | N2 Reader (saved by main session) | N10 Drafter only (and the quote's customer block) | `field_status.*`, `open_questions` |
-| `capacity.json` | N4 Capacity | N6, N8, N10 | `status` (`has_room` / `full` / `null`), `free_slots`, `alternatives`, `date_status` |
-| `menu.json` | N5 Menu | N6, N8, N10 | `clashes`, `verdict`, `dietary_status`, `shared_kitchen_note` |
-| `quote.json` | N7 Quote engine, unchanged | N8, N9, N10, N11 (repriced) | `status` (`ok` / `refused`), `total`, `deposit`, `terms_file`, `terms_note` |
-| `outcome.json` | N8 Decide | N4 (as holds, for later enquiries on the same date), N10, N11, board | `outcome`, `holds_date`, `date`, `received`, `owner`, `reason` |
+| `event.json` | N2 Reader (saved by main session) | N4, N5, N6, N7, N8, N10, N10a, N11 | `date`, `received`, `field_status.*`, `open_questions`, `suspicious_content` |
+| `contact.json` | N2 Reader (saved by main session) | N10 Drafter and N10a Checker only (and the quote's customer block) | `field_status.*`, `open_questions` |
+| `capacity.json` | N4 Capacity | N6, N8, N10, N10a | `status` (`has_room` / `full` / `null`), `free_slots`, `alternatives`, `date_status` |
+| `menu.json` | N5 Menu | N6, N8, N10, N10a | `clashes`, `verdict`, `dietary_status`, `shared_kitchen_note` |
+| `quote.json` | N7 Quote engine, unchanged | N8, N9, N10, N10a, N11 (repriced) | `status` (`ok` / `refused`), `total`, `deposit`, `terms_file`, `terms_note` |
+| `outcome.json` | N8 Decide | N4 (as holds, for later enquiries on the same date), N10, N10a, N11, board | `outcome`, `holds_date`, `date`, `received`, `owner`, `reason` |
 
 Contact details never reach Capacity or Menu.
 
@@ -64,7 +65,7 @@ Contact details never reach Capacity or Menu.
 | Holds | `outcome.json` with `holds_date: true` in earlier-received packs | N8 Decide | Capacity's `held` count. The only record of a proposed hold. |
 | Input fingerprints | `desk/.input-snapshot.json` | N0 | N11 checks no input changed during the run |
 | Approvals | `desk/approvals.json` | The Desk board only | Records what Priya and Jun Wei approved, against a hash of the file they saw |
-| Run outputs | `outputs/drafts/`, `outputs/quotes/`, `outputs/open-items.md`, `outputs/run-log.md` | N9, N10, N12 | Gitignored. What the people review. |
+| Run outputs | `outputs/drafts/`, `outputs/quotes/`, `outputs/checks/`, `outputs/open-items.md`, `outputs/run-log.md` | N9, N10, N10a (saved by main session), N12 | Gitignored. What the people review. |
 
 **Booked counts for this batch's dates** (from `desk/bookings.csv`, limit 18):
 
@@ -98,7 +99,9 @@ flowchart TD
     N8 -->|quote| N9[N9 Quote PDF<br/>code]
     N8 --> N10[N10 Drafter<br/>agent]
     N9 --> N10
-    N10 --> N11[N11 Batch validation<br/>code]
+    N10 --> N10a[N10a Checker<br/>agent, review only]
+    N10a -->|FIX, one repair| N10
+    N10a -->|VERIFIED COMPLETE, or NEEDS items only| N11[N11 Batch validation<br/>code]
     N11 -->|fail| FIX[Repair: re-run the named node]
     FIX --> N11
     N11 -->|pass| N12[N12 Summarise<br/>main session]
@@ -122,7 +125,9 @@ flowchart TD
 | N8 | N4 (later enquiries) | `outcome.json` `holds_date` | Next enquiry on the same date, by `received` |
 | N8 | N9 | `quote.json` | `outcome` is `quote` |
 | N8, N9 | N10 | The finished pack | `outcome.json` exists (and the PDF, for `quote`) |
-| N10 | N11 | Draft reply | Every enquiry has a draft |
+| N10 | N10a | Draft reply | Every draft, including a redraft after FIX |
+| N10a | N10 | `FIX-n` lines | Rule R12: once per enquiry, only when the fix is in the Drafter's power |
+| N10a | N11 | Checker report | Every enquiry has a report with no FIX left, or its remaining FIX items are listed for Priya (R12) |
 | N11 | Repair | Error lines | Exit 1 (rule R8) |
 | N11 | N12 | Pass line | Exit 0 and inputs unchanged |
 | N12 | P1, P2 | Board items, `open-items.md` | Always. Escalations go to their `owner`. |
@@ -134,7 +139,8 @@ flowchart TD
 - **N4 Capacity and N8 Decide**: **serial within one date, in `received` order**, because `held` comes from earlier-received packs' `outcome.json`. Different dates are independent and can run in parallel: {enq-04 → enq-05}, {enq-02 → enq-06}, {enq-03 → enq-07}, {enq-01}.
 - **N4 and N5 for the same enquiry**: in parallel with each other. N6 waits for both.
 - **N7, N9, N10**: in parallel across enquiries, once each enquiry's `outcome.json` is final.
-- **N11**: once, over the whole batch, after every Drafter has finished. Rule 1 is a batch-wide check, so it cannot run per enquiry.
+- **N10a Checker**: in parallel across enquiries, each as soon as its own Drafter finishes. Checkers share nothing and write nothing.
+- **N11**: once, over the whole batch, after every Checker has finished (and any R12 redraft has been checked again). Rule 1 is a batch-wide check, so it cannot run per enquiry.
 - **P1 and P2**: in parallel, each on their own items.
 
 ---
@@ -203,6 +209,14 @@ If two inbox files map to the same `enq-NN` (for example `enq-06-x.txt` and `enq
 
 The fix agreed for this batch: the user decided to rename the second Redhill enquiry (follow-up email of 19 Oct, 20 November, Bento Premium) from `enq-06b-redhill-logistics.txt` to `enq-07-redhill-logistics.txt` before the run, so it gets its own pack, `desk/packs/enq-07/`. It is a separate enquiry from enq-06 (12 November, Bento Classic), from the same customer. Each is routed on its own facts.
 
+**R12. The Checker reports issues (N10a).**
+The Checker only reviews and reports. It never edits the draft or the pack, and its report never changes `outcome.json`. The main session saves the report as `outputs/checks/enq-NN-check.md`, then:
+- `VERIFIED COMPLETE`: go on to N11.
+- `FIX-n`, where the right value is already in the pack (a wrong figure, a missing cancellation clause, a promised date, internal wording): re-run N10 Drafter **once**, with the FIX lines in its prompt, then run N10a again on the new draft. If FIX items remain after that one repair, list them in `open-items.md` as "not ready to send" for Priya. Never hand-edit the draft.
+- `FIX-n`, where the pack itself disagrees with the customer's words (date, headcount or dietary needs differ from the enquiry): a redraft cannot fix this, because the Drafter copies the pack. Stop the enquiry and tell the user. Re-running from N2 is the user's call.
+- `NEEDS INFO-n`: list it in `open-items.md` under the enquiry. If it is an unreadable file, R0 applies.
+- `NEEDS DECISION-n`: list it in `open-items.md` for the person the item names (Priya or Jun Wei). It does not block N11. The person decides on the board, and a draft changed as a result goes through N10a again before approval (R11).
+
 ### Batch
 
 **R8. The batch fails `desk/validate_desk.py`.**
@@ -235,4 +249,5 @@ If a reply or quote PDF changes after approval, then its approval is stale (the 
 
 - `validate_desk.py` reprices quotes with `quote-calculator/quote.py` and tells the user to make PDFs with `make_pdf.py`. The folder has `engine.py`, `make_quote.py` and `pdf.py` instead. When `quote.py` is missing, the reprice check is skipped silently, so the Rule 2 total and deposit check is not actually running.
 - R10: the `enq-\d\d` match in `validate_desk.py` and `board_server.py` still ignores any letter suffix. Renaming `enq-06b` to `enq-07` fixes this batch only. A later follow-up email saved as `enq-NNb` would be dropped silently again.
+- The approved escalate wording ("thank the customer, the team will come back to them") is written in two places: `.claude/agents/drafter.md` and check 9 of `.claude/agents/checker.md`. If one changes, the other must too. Moving it into `desk/desk-rules.md` section 3 would leave one copy.
 - The contracts do not route on `suspicious_content`. R9 keeps the decision table unchanged and only surfaces it to Priya. If the business wants such enquiries to `escalate` to Priya, that belongs in `design/contracts.md` section 6 first.
