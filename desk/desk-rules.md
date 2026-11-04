@@ -37,11 +37,13 @@ Each enquiry has its own folder, `desk/packs/enq-NN/`, where NN is the enquiry n
 | File | Written by | Contents |
 |---|---|---|
 | `event.json` | Reader (saved by the main session) | The event facts, as described in `desk/allowed-values.md` |
-| `contact.json` | Reader (saved by the main session) | `name`, `email`, `phone`, `company` (`null` when the customer didn't give one) |
-| `capacity.json` | Capacity | `date`, `booked`, `limit` (18), `free_slots`, `status` (`has_room` or `full`) and, when full, `alternatives`: up to two nearby dates with room, each with its `free_slots` |
-| `menu.md` | Menu | The package, each dietary need, any clash and a verdict: `OK` or `FLAG` |
+| `contact.json` | Reader (saved by the main session) | `name`, `email`, `phone`, `company` (`null` when the customer didn't give one), `field_status`, `open_questions` |
+| `capacity.json` | Capacity | `date`, `booked`, `held`, `limit` (18), `free_slots`, `status` (`has_room` or `full`), `alternatives` (when full: up to two nearby dates with room, each with its `free_slots`; otherwise `[]`), `date_status`, `open_questions` |
+| `menu.json` | Menu | `package`, `halal`, `vegetarian_guests`, `vegetarian_dishes`, `clashes`, `shared_kitchen_note`, `verdict` (`OK` or `FLAG`), `dietary_status`, `open_questions` |
 | `quote.json` | Quote Studio engine | The engine's JSON output, unchanged |
 | `outcome.json` | Main session | `enquiry_id`, `outcome`, `received`, `date`, `holds_date`, `reason`, and `owner` when escalating |
+
+The full field list for each handover, with each field's source and status, is in `design/contracts.md`.
 
 `outcome.json` example for an escalation:
 
