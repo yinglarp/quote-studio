@@ -92,7 +92,7 @@ def state():
             "client": (event or {}).get("client") if isinstance(event, dict) else None,
             "has_pack": pack.exists(), "outcome": outcome, "event": event,
             "contact": read_json(pack / "contact.json"), "capacity": read_json(pack / "capacity.json"),
-            "menu": read(pack / "menu.md"), "quote": read_json(pack / "quote.json"),
+            "menu": read_json(pack / "menu.json"), "quote": read_json(pack / "quote.json"),
             "draft": read(ROOT / "outputs/drafts" / f"{enq}-reply.md"),
             "pdf": f"/files/outputs/quotes/{enq}.pdf" if pdf.exists() else None,
             "approved": approved,

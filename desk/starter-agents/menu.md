@@ -23,7 +23,7 @@ TODO: What does Menu prioritise, and what is it cautious about?
 
 ## Output
 
-Return a short Markdown note for `menu.md` with the package, each dietary need, any clash, and a verdict of `OK` or `FLAG`.
+Return one JSON object for `menu.json`: the package, each dietary need, any clash, and a verdict of `OK` or `FLAG`. The fields are in `design/contracts.md`, section 4.
 
 TODO: Describe how a clash must be worded.
 
