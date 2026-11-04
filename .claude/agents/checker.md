@@ -45,8 +45,18 @@ Check at least these:
 4. No dish is called safe or allergen-free for an allergy, and the shared kitchen is mentioned whenever allergies come up.
 5. No date is promised or confirmed. A held date appears only for a `quote` where `capacity.json` says `has_room`, and only until the deposit is paid.
 6. The cancellation clause is quoted in full and matches the terms file in force on the event date. For an event in 2027, the reply must say the 2027 terms are still a draft; flag which terms to cite as NEEDS DECISION.
-7. Every `open_questions` item in the pack is asked, and nothing the customer already answered is asked again.
+7. For a `clarify` reply, every `open_questions` item in the pack is asked, as numbered questions. For a `quote` or `escalate` reply, unasked open questions are not an issue. For every outcome, nothing the customer already answered is asked again.
 8. Nothing mentions internal costs, margins, staff pay, other customers or internal file names.
+9. Every promise or commitment in the reply, including any time promise ("shortly", "soon", "within 24 hours", "today"), is UNSUPPORTED unless a governing source states it word for word. Sounding like a normal holding line is not support. Raise each unsupported promise as NEEDS DECISION for the pack's `owner`.
+   **Approved escalate wording.** For an `escalate` reply, these are the Desk's approved shape and count as SUPPORTED, with "approved escalate wording" as their support: thanking the customer, and saying that the team is looking at the request and will come back to them. Anything added to that is still checked: a time ("shortly", "within a day"), a named person, or a hint at the reason.
+10. List every request the customer made. A request is a sentence that asks a question, or asks us to do something: send, confirm, check, make sure, book, reserve. Facts and requirements the customer states ("All food must be halal", "8 of our team are vegetarian", "There will be 60 of us", the package chosen) are not requests. Check 2 covers them, so leave them out of this list. For each request, say whether the reply answers it, declines it or ignores it.
+   - For a `quote` or `clarify` reply, raise each ignored request as its own NEEDS DECISION for the pack's `owner`.
+   - For an `escalate` reply, saying little is expected. Raise **one** NEEDS DECISION for the `owner` that lists every ignored request. Raise a **separate** NEEDS DECISION only for a request about allergy safety.
+   - For any allergy request, say which dishes `menu.json` flags, and that any mention of the allergy must include the shared kitchen note.
+
+A reply that says little is not correct by default. Being "correctly absent" covers prices, dates and internal reasons only. It never excuses checks 9 and 10.
+
+Read every file listed under **Files you may read** on every run, including `desk/menu-and-dietary.md`, even when the reply names no dish.
 
 If a file you need is missing or cannot be read, report which file, the exact error and what you needed from it, as a NEEDS INFO issue. Never fill the gap by guessing or by reading another file instead.
 
