@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "outcome.json",
+  "description": "Main session to Drafter, board and validator. design/contracts.md, section 6.",
+  "type": "object",
+  "required": ["enquiry_id", "outcome", "received", "date", "holds_date"],
+  "additionalProperties": false,
+  "properties": {
+    "enquiry_id": {"type": "string", "pattern": "^enq-\\d\\d$"},
+    "outcome": {"enum": ["quote", "clarify", "escalate"]},
+    "received": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"},
+    "date": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "holds_date": {"type": "boolean"},
+    "reason": {"type": "string", "maxLength": 160},
+    "owner": {"enum": ["Priya", "Jun Wei"]}
+  },
+  "allOf": [
+    {"if": {"required": ["outcome"], "properties": {"outcome": {"const": "quote"}}},
+     "then": {"properties": {"holds_date": {"const": true}, "date": {"type": "string"}}}},
+    {"if": {"required": ["outcome"], "properties": {"outcome": {"enum": ["clarify", "escalate"]}}},
+     "then": {"required": ["reason"], "properties": {"holds_date": {"const": false}}}},
+    {"if": {"required": ["outcome"], "properties": {"outcome": {"const": "escalate"}}}, "then": {"required": ["owner"]}},
+    {"if": {"required": ["outcome"], "properties": {"outcome": {"enum": ["quote", "clarify"]}}}, "then": {"not": {"required": ["owner"]}}}
+  ]
+}

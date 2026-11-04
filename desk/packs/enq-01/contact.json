@@ -1,0 +1,10 @@
+{
+  "name": "Mei Ling",
+  "email": "mei.ling@harbourline-insurance.example",
+  "phone": null,
+  "company": "Harbourline Insurance",
+  "field_status": {"name": "verified", "email": "verified", "phone": "missing", "company": "verified"},
+  "open_questions": [
+    "Ask for a contact phone number; the enquiry does not give one."
+  ]
+}

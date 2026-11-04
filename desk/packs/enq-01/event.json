@@ -1,0 +1,21 @@
+{
+  "enquiry_id": "enq-01",
+  "received": "2026-10-03T16:40",
+  "client": "Harbourline Insurance",
+  "date": "2026-12-11",
+  "pax": 120,
+  "package": "classic_buffet",
+  "zone": "cbd",
+  "venue": "Raffles Place office",
+  "add_ons": {"live_stations": 1, "extra_dessert": false, "staff": 2, "staff_hours": 4},
+  "repeat_client": false,
+  "dietary": {"halal": null, "vegetarian_guests": null, "allergies": null},
+  "special_requests": null,
+  "suspicious_content": null,
+  "field_status": {"date": "verified", "pax": "assumed", "package": "verified", "zone": "verified", "add_ons": "verified", "dietary": "missing"},
+  "open_questions": [
+    "Confirm the exact number of guests; the enquiry says about 120.",
+    "Ask about dietary needs: halal, vegetarian guests and allergies. The enquiry does not mention them.",
+    "Ask for the full street address of the Raffles Place office for the venue."
+  ]
+}

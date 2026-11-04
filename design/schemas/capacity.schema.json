@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "capacity.json",
+  "description": "Capacity to Drafter. design/contracts.md, section 3.",
+  "type": "object",
+  "required": ["date", "booked", "held", "limit", "free_slots", "status", "alternatives", "date_status", "open_questions"],
+  "additionalProperties": false,
+  "properties": {
+    "date": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "booked": {"type": ["integer", "null"], "minimum": 0},
+    "held": {"type": ["integer", "null"], "minimum": 0},
+    "limit": {"const": 18},
+    "free_slots": {"type": ["integer", "null"], "minimum": 0, "maximum": 18},
+    "status": {"enum": ["has_room", "full", null]},
+    "alternatives": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["date", "free_slots"],
+        "additionalProperties": false,
+        "properties": {
+          "date": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "free_slots": {"type": "integer", "minimum": 1, "maximum": 18}
+        }
+      }
+    },
+    "date_status": {"enum": ["verified", "assumed", "missing"]},
+    "open_questions": {"type": "array", "items": {"type": "string", "maxLength": 200}}
+  },
+  "allOf": [
+    {"if": {"required": ["status"], "properties": {"status": {"const": "has_room"}}}, "then": {"properties": {"alternatives": {"maxItems": 0}, "free_slots": {"minimum": 1}}}},
+    {"if": {"required": ["status"], "properties": {"status": {"const": "full"}}}, "then": {"properties": {"free_slots": {"maximum": 0}}}}
+  ]
+}

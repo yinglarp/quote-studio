@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "contact.json",
+  "description": "Reader to Drafter. design/contracts.md, section 2.",
+  "type": "object",
+  "required": ["name", "email", "phone", "company", "field_status", "open_questions"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {"type": ["string", "null"], "maxLength": 80},
+    "email": {"type": ["string", "null"], "pattern": "^[^@\\s]+@[^@\\s]+$", "maxLength": 120},
+    "phone": {"type": ["string", "null"], "maxLength": 30},
+    "company": {"type": ["string", "null"], "maxLength": 80},
+    "field_status": {
+      "type": "object",
+      "required": ["name", "email", "phone", "company"],
+      "additionalProperties": {"enum": ["verified", "assumed", "missing"]}
+    },
+    "open_questions": {"type": "array", "items": {"type": "string", "maxLength": 200}}
+  }
+}
